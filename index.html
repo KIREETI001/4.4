@@ -1,143 +1,430 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mock Twitter</title>
-    <style>
-        /* General Styles */
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f5f8fa;
-            margin: 0;
-            padding: 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            flex-direction: column;
-        }
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Mock Tweeter</title>
+  <style>
+    /* RESET & GENERAL STYLES */
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f5f8fa;
+      color: #14171a;
+      display: flex;
+      justify-content: center;
+      min-height: 100vh;
+    }
+    
+    /* MAIN LAYOUT WRAPPER */
+    .tweeter-layout {
+      display: grid;
+      grid-template-columns: 220px 1fr 350px; /* Left nav, main feed, right sidebar */
+      grid-gap: 20px;
+      width: 100%;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 20px;
+    }
 
-        /* Container for the entire app */
-        .container {
-            width: 100%;
-            max-width: 600px;
-            padding: 20px;
-            box-sizing: border-box;
-        }
+    /* LEFT NAVIGATION */
+    .left-nav {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      padding: 10px;
+      background-color: #fff;
+      border: 1px solid #e1e8ed;
+      border-radius: 10px;
+      height: fit-content;
+    }
+    .left-nav h2 {
+      color: #1da1f2;
+      font-size: 1.5rem;
+      margin-bottom: 20px;
+      padding-left: 10px;
+    }
+    .left-nav h2 img {
+      width: 24px;
+      vertical-align: middle;
+      margin-left: 8px;
+    }
+    .left-nav ul {
+      list-style: none;
+      width: 100%;
+    }
+    .left-nav li {
+      padding: 10px 15px;
+      margin-bottom: 5px;
+      border-radius: 25px;
+      cursor: pointer;
+      font-weight: 500;
+      transition: background-color 0.2s;
+    }
+    .left-nav li:hover {
+      background-color: #e8f5fe;
+    }
 
-        /* Header */
-        h1 {
-            text-align: center;
-            color: #1da1f2;
-            margin-bottom: 20px;
-            font-size: 2.5rem;
-        }
+    /* MAIN CONTENT (TWEET FEED) */
+    .main-content {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .main-content h1 {
+      font-size: 1.5rem;
+      color: #14171a;
+      margin-bottom: 10px;
+    }
+    /* Individual tweet styling */
+    .tweet {
+      background-color: #fff;
+      border: 1px solid #e1e8ed;
+      border-radius: 10px;
+      padding: 15px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      transition: box-shadow 0.3s ease;
+    }
+    .tweet:hover {
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    }
+    .tweet-header {
+      display: flex;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+    .profile-pic {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      margin-right: 10px;
+      object-fit: cover;
+    }
+    .tweet-user-info {
+      display: flex;
+      flex-direction: column;
+    }
+    .username {
+      font-weight: bold;
+      color: #14171a;
+    }
+    .handle {
+      color: #657786;
+      font-size: 0.9rem;
+    }
+    .tweet p {
+      margin: 0 0 10px;
+      font-size: 1rem;
+      color: #14171a;
+    }
+    .tweet button {
+      background-color: #ff4b5c;
+      color: white;
+      border: none;
+      padding: 5px 10px;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 0.9rem;
+      transition: background-color 0.3s ease;
+    }
+    .tweet button:hover {
+      background-color: #ff1c34;
+    }
 
-        /* Tweet Styles */
-        .tweet {
-            background-color: #fff;
-            border: 1px solid #e1e8ed;
-            border-radius: 10px;
-            padding: 15px;
-            margin-bottom: 10px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-            transition: box-shadow 0.3s ease;
-        }
+    /* RIGHT SIDEBAR */
+    .right-sidebar {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+    .sidebar-section {
+      background-color: #fff;
+      border: 1px solid #e1e8ed;
+      border-radius: 10px;
+      padding: 15px;
+    }
+    .sidebar-section h3 {
+      margin-bottom: 10px;
+      color: #14171a;
+      font-size: 1.1rem;
+    }
+    .sidebar-section ul {
+      list-style: none;
+    }
+    .sidebar-section li {
+      margin-bottom: 10px;
+      color: #657786;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .sidebar-section li:hover {
+      text-decoration: underline;
+    }
+    /* Smaller profile pic for sidebar */
+    .sidebar-profile-pic {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      object-fit: cover;
+    }
 
-        .tweet:hover {
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-        }
+    /* Suggestions Section */
+    .suggestions-input {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+    .suggestions-input input[type="text"] {
+      padding: 8px;
+      border: 1px solid #ccd6dd;
+      border-radius: 5px;
+      font-size: 0.95rem;
+    }
+    .suggestions-input button {
+      background-color: #1da1f2;
+      color: #fff;
+      border: none;
+      padding: 8px 10px;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 0.95rem;
+      transition: background-color 0.3s ease;
+    }
+    .suggestions-input button:hover {
+      background-color: #0d8ce0;
+    }
+    .suggestion-list {
+      list-style: none;
+      padding-left: 0;
+      margin-top: 10px;
+    }
+    .suggestion-list li {
+      background-color: #f5f8fa;
+      margin-bottom: 5px;
+      padding: 6px 8px;
+      border-radius: 5px;
+      color: #14171a;
+    }
 
-        .tweet p {
-            margin: 0;
-            font-size: 1rem;
-            color: #14171a;
-        }
-
-        .tweet button {
-            background-color: #ff4b5c;
-            color: white;
-            border: none;
-            padding: 5px 10px;
-            border-radius: 5px;
-            cursor: pointer;
-            margin-top: 10px;
-            font-size: 0.9rem;
-            transition: background-color 0.3s ease;
-        }
-
-        .tweet button:hover {
-            background-color: #ff1c34;
-        }
-
-        /* Responsive Design */
-        @media (max-width: 600px) {
-            h1 {
-                font-size: 2rem;
-            }
-
-            .tweet {
-                padding: 10px;
-            }
-
-            .tweet p {
-                font-size: 0.9rem;
-            }
-
-            .tweet button {
-                font-size: 0.8rem;
-            }
-        }
-    </style>
+    /* RESPONSIVE DESIGN */
+    @media (max-width: 900px) {
+      .tweeter-layout {
+        grid-template-columns: 60px 1fr; /* Hide right sidebar on smaller screens */
+      }
+      .right-sidebar {
+        display: none;
+      }
+    }
+    @media (max-width: 600px) {
+      .left-nav h2 {
+        display: none;
+      }
+      .left-nav li {
+        margin-bottom: 10px;
+      }
+      .profile-pic {
+        width: 40px;
+        height: 40px;
+      }
+    }
+  </style>
 </head>
 <body>
-    <div class="container">
-        <h1>Mock Twitter</h1>
-        <div id="tweets">
-            <!-- Tweets will be dynamically added here -->
-        </div>
+  <div class="tweeter-layout">
+    <!-- LEFT NAVIGATION -->
+    <div class="left-nav">
+      <h2>
+        Tweeter 
+        <img src="https://img.icons8.com/fluency/48/0000ff/twitter.png" alt="Blue Bird Icon" />
+      </h2>
+      <ul>
+        <li>Home</li>
+        <li>Explore</li>
+        <li>Notifications</li>
+        <li>Messages</li>
+        <li>Bookmarks</li>
+        <li>Lists</li>
+        <li>Profile</li>
+        <li>More</li>
+      </ul>
     </div>
 
-    <script>
-        // Mock data: Initial tweets
-        let tweets = [
-            { id: 1, text: "Just had a great coffee! ☕" },
-            { id: 2, text: "Working on a cool hackathon project. 🚀" },
-            { id: 3, text: "Loving the weather today! 🌞" }
-        ];
+    <!-- MAIN CONTENT: Tweet Feed -->
+    <div class="main-content">
+      <h1>Home</h1>
+      <div id="tweets">
+        <!-- Tweets will be dynamically added here -->
+      </div>
+    </div>
 
-        // Function 
-        // 
-        // to render tweets
-        function renderTweets() {
-            const tweetsContainer = document.getElementById("tweets");
-            tweetsContainer.innerHTML = ""; // Clear existing tweets
-            tweets.forEach(tweet => {
-                const tweetElement = document.createElement("div");
-                tweetElement.className = "tweet";
-                tweetElement.innerHTML = `
-                    <p>${tweet.text}</p>
-                    <button onclick="deleteTweet(${tweet.id})">Delete</button>
-                `;
-                tweetsContainer.appendChild(tweetElement);
-            });
-        }
+    <!-- RIGHT SIDEBAR -->
+    <div class="right-sidebar">
+      <!-- Singapore trends -->
+      <div class="sidebar-section">
+        <h3>Singapore trends</h3>
+        <ul>
+          <li>#SGWeekend</li>
+          <li>#DurianSeason</li>
+          <li>#HawkerCulture</li>
+          <li>#MarinaBay</li>
+          <li>#SGFoodie</li>
+        </ul>
+      </div>
+      <!-- Who to follow -->
+      <div class="sidebar-section">
+        <h3>Who to follow</h3>
+        <ul>
+          <li>
+            <img
+              src="https://randomuser.me/api/portraits/men/45.jpg"
+              alt="Profile"
+              class="sidebar-profile-pic"
+            />
+            <div>
+              <strong>James Tan</strong><br/>
+              <span>@jamestan88</span>
+            </div>
+          </li>
+          <li>
+            <img
+              src="https://randomuser.me/api/portraits/women/22.jpg"
+              alt="Profile"
+              class="sidebar-profile-pic"
+            />
+            <div>
+              <strong>Serene Lee</strong><br/>
+              <span>@serenelee</span>
+            </div>
+          </li>
+          <li>
+            <img
+              src="https://randomuser.me/api/portraits/men/32.jpg"
+              alt="Profile"
+              class="sidebar-profile-pic"
+            />
+            <div>
+              <strong>Michael Chua</strong><br/>
+              <span>@michaelchua</span>
+            </div>
+          </li>
+        </ul>
+      </div>
 
-        // Function to delete a tweet and bring it back with original text
-        function deleteTweet(id) {
-            const deletedTweet = tweets.find(tweet => tweet.id === id);
-            tweets = tweets.filter(tweet => tweet.id !== id);
-            renderTweets();
+      <!-- Suggestions Section -->
+      <div class="sidebar-section">
+        <h3>Suggestions</h3>
+        <div class="suggestions-input">
+          <input type="text" id="suggestionInput" placeholder="Your suggestion..." />
+          <button onclick="sendSuggestion()">Send</button>
+        </div>
+        <ul id="suggestionList" class="suggestion-list"></ul>
+      </div>
+    </div>
+  </div>
 
-            setTimeout(() => {
-                tweets.push({ id: deletedTweet.id, text: deletedTweet.text }); // Restore with same text
-                renderTweets();
-            }, 2000); // Reappears after 2 seconds
-        }
+  <script>
+    // Mock data: Initial tweets with usernames, handles, and profile images from randomuser.me/api
+    let tweets = [
+      { 
+        id: 1, 
+        username: "CoffeeLover", 
+        handle: "@coffeeaddict", 
+        profilePic: "https://randomuser.me/api/portraits/men/1.jpg",
+        text: "Just had a great coffee! ☕" 
+      },
+      { 
+        id: 2, 
+        username: "HackathonHero", 
+        handle: "@codewizard", 
+        profilePic: "https://randomuser.me/api/portraits/men/2.jpg", 
+        text: "Working on a cool hackathon project. 🚀" 
+      },
+      { 
+        id: 3, 
+        username: "SunnyDay", 
+        handle: "@sunshine", 
+        profilePic: "https://randomuser.me/api/portraits/women/3.jpg", 
+        text: "Loving the weather today! 🌞" 
+      }
+    ];
 
-        // Initial render
+    // Array to store user suggestions
+    let suggestions = [];
+
+    // Function to render tweets
+    function renderTweets() {
+      const tweetsContainer = document.getElementById("tweets");
+      tweetsContainer.innerHTML = ""; // Clear existing tweets
+      tweets.forEach(tweet => {
+        const tweetElement = document.createElement("div");
+        tweetElement.className = "tweet";
+        tweetElement.innerHTML = `
+          <div class="tweet-header">
+            <img src="${tweet.profilePic}" alt="Profile Picture" class="profile-pic" />
+            <div class="tweet-user-info">
+              <span class="username">${tweet.username}</span>
+              <span class="handle">${tweet.handle}</span>
+            </div>
+          </div>
+          <p>${tweet.text}</p>
+          <button onclick="deleteTweet(${tweet.id})">Delete</button>
+        `;
+        tweetsContainer.appendChild(tweetElement);
+      });
+    }
+
+    // Function to delete a tweet (with the intentional "reappear" bug)
+    function deleteTweet(id) {
+      tweets = tweets.filter(tweet => tweet.id !== id);
+      renderTweets();
+      // The bug: after 2 seconds, the deleted tweet reappears with a different image
+      setTimeout(() => {
+        tweets.push({ 
+          id: id, 
+          username: "ReappearedUser", 
+          handle: "@reappear", 
+          profilePic: "https://randomuser.me/api/portraits/men/4.jpg", 
+          text: `Tweet ${id} (reappeared)` 
+        });
         renderTweets();
-    </script>
+      }, 2000);
+    }
+
+    // Function to send a suggestion
+    function sendSuggestion() {
+      const suggestionInput = document.getElementById("suggestionInput");
+      const suggestionText = suggestionInput.value.trim();
+      
+      if (suggestionText) {
+        // Add suggestion to array
+        suggestions.push(suggestionText);
+        // Re-render suggestions
+        renderSuggestions();
+        // Clear input
+        suggestionInput.value = "";
+      }
+    }
+
+    // Render suggestions
+    function renderSuggestions() {
+      const suggestionList = document.getElementById("suggestionList");
+      suggestionList.innerHTML = ""; // Clear existing suggestions
+      suggestions.forEach(suggestion => {
+        const li = document.createElement("li");
+        li.textContent = suggestion;
+        suggestionList.appendChild(li);
+      });
+    }
+
+    // Initial render
+    renderTweets();
+  </script>
 </body>
 </html>
