@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mock Twitter</title>
+    <style>
+        /* General Styles */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f5f8fa;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            flex-direction: column;
+        }
+
+        /* Container for the entire app */
+        .container {
+            width: 100%;
+            max-width: 600px;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        /* Header */
+        h1 {
+            text-align: center;
+            color: #1da1f2;
+            margin-bottom: 20px;
+            font-size: 2.5rem;
+        }
+
+        /* Tweet Styles */
+        .tweet {
+            background-color: #fff;
+            border: 1px solid #e1e8ed;
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 10px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            transition: box-shadow 0.3s ease;
+        }
+
+        .tweet:hover {
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .tweet p {
+            margin: 0;
+            font-size: 1rem;
+            color: #14171a;
+        }
+
+        .tweet button {
+            background-color: #ff4b5c;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 10px;
+            font-size: 0.9rem;
+            transition: background-color 0.3s ease;
+        }
+
+        .tweet button:hover {
+            background-color: #ff1c34;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 600px) {
+            h1 {
+                font-size: 2rem;
+            }
+
+            .tweet {
+                padding: 10px;
+            }
+
+            .tweet p {
+                font-size: 0.9rem;
+            }
+
+            .tweet button {
+                font-size: 0.8rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Mock Twitter</h1>
+        <div id="tweets">
+            <!-- Tweets will be dynamically added here -->
+        </div>
+    </div>
+
+    <script>
+        // Mock data: Initial tweets
+        let tweets = [
+            { id: 1, text: "Just had a great coffee! ☕" },
+            { id: 2, text: "Working on a cool hackathon project. 🚀" },
+            { id: 3, text: "Loving the weather today! 🌞" }
+        ];
+
+        // Function 
+        // 
+        // to render tweets
+        function renderTweets() {
+            const tweetsContainer = document.getElementById("tweets");
+            tweetsContainer.innerHTML = ""; // Clear existing tweets
+            tweets.forEach(tweet => {
+                const tweetElement = document.createElement("div");
+                tweetElement.className = "tweet";
+                tweetElement.innerHTML = `
+                    <p>${tweet.text}</p>
+                    <button onclick="deleteTweet(${tweet.id})">Delete</button>
+                `;
+                tweetsContainer.appendChild(tweetElement);
+            });
+        }
+
+        // Function to delete a tweet and bring it back with original text
+        function deleteTweet(id) {
+            const deletedTweet = tweets.find(tweet => tweet.id === id);
+            tweets = tweets.filter(tweet => tweet.id !== id);
+            renderTweets();
+
+            setTimeout(() => {
+                tweets.push({ id: deletedTweet.id, text: deletedTweet.text }); // Restore with same text
+                renderTweets();
+            }, 2000); // Reappears after 2 seconds
+        }
+
+        // Initial render
+        renderTweets();
+    </script>
+</body>
+</html>
