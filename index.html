@@ -174,20 +174,20 @@
       object-fit: cover;
     }
 
-    /* Suggestions Section */
-    .suggestions-input {
+    /* Feedback Section */
+    .Feedback-input {
       display: flex;
       flex-direction: column;
       gap: 10px;
       margin-bottom: 10px;
     }
-    .suggestions-input input[type="text"] {
+    .Feedback-input input[type="text"] {
       padding: 8px;
       border: 1px solid #ccd6dd;
       border-radius: 5px;
       font-size: 0.95rem;
     }
-    .suggestions-input button {
+    .Feedback-input button {
       background-color: #1da1f2;
       color: #fff;
       border: none;
@@ -197,15 +197,15 @@
       font-size: 0.95rem;
       transition: background-color 0.3s ease;
     }
-    .suggestions-input button:hover {
+    .Feedback-input button:hover {
       background-color: #0d8ce0;
     }
-    .suggestion-list {
+    .feedback-list {
       list-style: none;
       padding-left: 0;
       margin-top: 10px;
     }
-    .suggestion-list li {
+    .feedback-list li {
       background-color: #f5f8fa;
       margin-bottom: 5px;
       padding: 6px 8px;
@@ -317,14 +317,14 @@
         </ul>
       </div>
 
-      <!-- Suggestions Section -->
+      <!-- Feedback Section -->
       <div class="sidebar-section">
-        <h3>Suggestions</h3>
-        <div class="suggestions-input">
-          <input type="text" id="suggestionInput" placeholder="Your suggestion..." />
+        <h3>Feedback</h3>
+        <div class="Feedback-input">
+          <input type="text" id="suggestionInput" placeholder="Your feedback..." />
           <button onclick="sendSuggestion()">Send</button>
         </div>
-        <ul id="suggestionList" class="suggestion-list"></ul>
+        <ul id="suggestionList" class="feedback-list"></ul>
       </div>
     </div>
   </div>
@@ -355,8 +355,8 @@
       }
     ];
 
-    // Array to store user suggestions
-    let suggestions = [];
+    // Array to store user Feedback
+    let Feedback = [];
 
     // Function to render tweets
     function renderTweets() {
@@ -380,45 +380,45 @@
       });
     }
 
-    // Function to delete a tweet (with the intentional "reappear" bug)
-    function deleteTweet(id) {
-      tweets = tweets.filter(tweet => tweet.id !== id);
-      renderTweets();
-      // The bug: after 2 seconds, the deleted tweet reappears with a different image
-      setTimeout(() => {
-        tweets.push({ 
-          id: id, 
-          username: "ReappearedUser", 
-          handle: "@reappear", 
-          profilePic: "https://randomuser.me/api/portraits/men/4.jpg", 
-          text: `Tweet ${id} (reappeared)` 
-        });
-        renderTweets();
-      }, 2000);
-    }
+  // Function to delete a tweet (with the intentional "reappear" bug)
+  function deleteTweet(id) {
+   // Find the original tweet before removing
+    const originalTweet = tweets.find(tweet => tweet.id === id);
+  
+   // Remove it
+   tweets = tweets.filter(tweet => tweet.id !== id);
+   renderTweets();
 
-    // Function to send a suggestion
+   // Re-add the original tweet after 2 seconds
+   setTimeout(() => {
+    tweets.push(originalTweet);
+    renderTweets();
+  }, 2000);
+}
+
+
+    // Function to send a feedback
     function sendSuggestion() {
       const suggestionInput = document.getElementById("suggestionInput");
       const suggestionText = suggestionInput.value.trim();
       
       if (suggestionText) {
-        // Add suggestion to array
-        suggestions.push(suggestionText);
-        // Re-render suggestions
+        // Add feedback to array
+        Feedback.push(suggestionText);
+        // Re-render Feedback
         renderSuggestions();
         // Clear input
         suggestionInput.value = "";
       }
     }
 
-    // Render suggestions
+    // Render Feedback
     function renderSuggestions() {
       const suggestionList = document.getElementById("suggestionList");
-      suggestionList.innerHTML = ""; // Clear existing suggestions
-      suggestions.forEach(suggestion => {
+      suggestionList.innerHTML = ""; // Clear existing Feedback
+      Feedback.forEach(feedback => {
         const li = document.createElement("li");
-        li.textContent = suggestion;
+        li.textContent = feedback;
         suggestionList.appendChild(li);
       });
     }
